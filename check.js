@@ -42,7 +42,7 @@ function getRandomPropertyType() {
 }
 
 function getRandomCity() {
-    const cities = ["Delhi","Mumbai","Kolkata","Chennai","Bangalore","Hyderabad","Ahmedabad","Pune","Surat","Jaipur","Kanpur","Lucknow","Nagpur","Patna","Indore","Thane","Bhopal","Visakhapatnam","Vadodara","Firozabad","Ludhiana","Rajkot","Agra","Siliguri","Nashik","Faridabad","Patiala","Meerut","Kalyan-Dombivali","Vasai-Virar","Varanasi","Srinagar","Dhanbad","Jodhpur","Amritsar","Raipur","Allahabad","Coimbatore","Jabalpur","Gwalior","Vijayawada","Madurai","Guwahati","Chandigarh","Hubli-Dharwad","Amroha","Moradabad","Gurgaon","Aligarh","Solapur","Ranchi","Jalandhar","Tiruchirappalli","Bhubaneswar","Salem","Warangal","Mira-Bhayandar","Thiruvananthapuram","Bhiwandi","Saharanpur","Guntur","Amravati","Bikaner","Noida","Jamshedpur","Bhilai","Cuttack","Firozabad","Kochi","Nellore","Bhavnagar","Dehradun","Durgapur","Asansol","Rourkela","Nanded","Kolhapur","Ajmer","Akola","Gulbarga","Jamnagar","Ujjain","Loni","Siliguri","Jhansi","Ulhasnagar","Jammu","Sangli-Miraj","Mangalore","Erode","Belgaum","Kurnool","Ambattur","Rajahmundry","Tirunelveli","Malegaon","Gaya","Tirupur","Davanagere","Kozhikode","Akola","Kurnool","Bokaro","Rajahmundry","Ballari","Agartala","Bhagalpur","Latur","Dhule","Korba","Bhilwara","Brahmapur","Mysore","Muzaffarpur","Ahmednagar","Kollam","Raghun"]
+    const cities = ["Delhi", "Mumbai", "Kolkata", "Chennai", "Bangalore", "Hyderabad", "Ahmedabad", "Pune", "Surat", "Jaipur", "Kanpur", "Lucknow", "Nagpur", "Patna", "Indore", "Thane", "Bhopal", "Visakhapatnam", "Vadodara", "Firozabad", "Ludhiana", "Rajkot", "Agra", "Siliguri", "Nashik", "Faridabad", "Patiala", "Meerut", "Kalyan-Dombivali", "Vasai-Virar", "Varanasi", "Srinagar", "Dhanbad", "Jodhpur", "Amritsar", "Raipur", "Allahabad", "Coimbatore", "Jabalpur", "Gwalior", "Vijayawada", "Madurai", "Guwahati", "Chandigarh", "Hubli-Dharwad", "Amroha", "Moradabad", "Gurgaon", "Aligarh", "Solapur", "Ranchi", "Jalandhar", "Tiruchirappalli", "Bhubaneswar", "Salem", "Warangal", "Mira-Bhayandar", "Thiruvananthapuram", "Bhiwandi", "Saharanpur", "Guntur", "Amravati", "Bikaner", "Noida", "Jamshedpur", "Bhilai", "Cuttack", "Firozabad", "Kochi", "Nellore", "Bhavnagar", "Dehradun", "Durgapur", "Asansol", "Rourkela", "Nanded", "Kolhapur", "Ajmer", "Akola", "Gulbarga", "Jamnagar", "Ujjain", "Loni", "Siliguri", "Jhansi", "Ulhasnagar", "Jammu", "Sangli-Miraj", "Mangalore", "Erode", "Belgaum", "Kurnool", "Ambattur", "Rajahmundry", "Tirunelveli", "Malegaon", "Gaya", "Tirupur", "Davanagere", "Kozhikode", "Akola", "Kurnool", "Bokaro", "Rajahmundry", "Ballari", "Agartala", "Bhagalpur", "Latur", "Dhule", "Korba", "Bhilwara", "Brahmapur", "Mysore", "Muzaffarpur", "Ahmednagar", "Kollam", "Raghun"]
     return getRandomFromArray(cities);
 }
 
@@ -103,16 +103,19 @@ function getRandomNumber(min, max) {
 function getRandomPhoneNumber() {
     const prefix = ['123', '456', '789'];
     return `${getRandomFromArray(prefix)}-${getRandomNumber(100, 999)}-${getRandomNumber(1000, 9999)}`;
+} function getRandomNumber(min, max) {
+    return Math.random() * (max - min) + min;
 }
 
 function getRandomLatitude() {
-    return getRandomNumber(-90, 90).toFixed(4);
+    // Set the range for Indian latitudes (approximately)
+    return getRandomNumber(8, 38).toFixed(4);
 }
 
 function getRandomLongitude() {
-    return getRandomNumber(-180, 180).toFixed(4);
+    // Set the range for Indian longitudes (approximately)
+    return getRandomNumber(68, 98).toFixed(4);
 }
-
 function getRandomState() {
     const states = ['CA', 'NY', 'FL', 'TX', 'CO', 'IL', 'WA', 'TN', 'MA', 'DC'];
     return getRandomFromArray(states);
@@ -155,8 +158,8 @@ async function performPostRequests(json) {
             maxBodyLength: Infinity,
             url: 'http://localhost:4000/Property/RegisterProperty', // Replace with the correct URL
             headers: {
-                'Token': '475661bd-9c4e-48aa-8045-b8f6e0bf2458',
-                'UserId': 'Accomzy-62ujudmlrh5bpan',
+                'Token': '8f379ba4-afde-4e89-8337-fc76eecd412e',
+                'UserId': 'Accomzy-62ujl8qlrlhhxbj',
                 'Content-Type': 'application/json'
             },
             data: data

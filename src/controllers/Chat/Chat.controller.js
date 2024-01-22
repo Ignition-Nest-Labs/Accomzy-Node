@@ -65,7 +65,7 @@ const chatWithUser = async (req, res) => {
                 UserId: UserId,
                 Name: userData.Name,
                 ProfilePhoto: userData.ProfilePhoto,
-                Role:userData.Explorer == 1 ? 'Explorer' : 'Owner',
+                Role: userData.Explorer == 1 ? 'Explorer' : 'Owner',
                 LatestMessage: 'No messages yet'
 
             })
@@ -100,7 +100,31 @@ const sendMessage = async (req, res) => {
         SenderId: UserId,
         messageID: messageID,
         createdAt: Date.now()
+
     })
+    //update the latest message in the room
+
+    await firebaseAdmin.database().ref('Rooms').child(roomId).child(UserId).update({
+        LatestMessage: message
+    })
+
+
+    //update the other user latest message in the room
+    firebaseAdmin.database().ref('Rooms').child(roomId).once('value', (snapshot) => {
+        const rooms = snapshot.val()
+        for (const user in rooms) {
+            if (user !== UserId) {
+                firebaseAdmin.database().ref('Rooms').child(roomId).child(user).update({
+                    LatestMessage: message
+                })
+            }
+        }
+    })
+
+
+
+
+
     return res.status(200).json({ message: 'Message sent successfully' });
 }
 

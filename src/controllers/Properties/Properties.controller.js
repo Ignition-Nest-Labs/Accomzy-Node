@@ -95,16 +95,99 @@ const registerProperty = async (req, res) => {
     }
 };
 const getAllProperties = async (req, res) => {
+
+
+
+
+
     try {
-        const { page = 1, pageSize = 10 } = req.body;
-        const offset = (page - 1) * pageSize;
 
-        const properties = await PropertiesModel.findAll({
-            limit: parseInt(pageSize),
-            offset: parseInt(offset),
-        });
+        const { facilities, amenities, minPrice, maxPrice, latitude, longitude } = req.body;
 
-        properties.forEach((property) => {
+
+
+        const filterByFacilities = async (properties) => {
+            const filteredProperties = [];
+            if (facilities !== undefined && facilities.length > 0) {
+                const facilitiesToCheck = facilities.map((facility) => facility.name);
+                for (const property of properties) {
+                    const propertyFacilities = (property.Facilities);
+                    const propertyFacilitiesNames = propertyFacilities.map((facility) => facility.name);
+
+                    if (facilitiesToCheck.every((facility) => propertyFacilitiesNames.includes(facility))) {
+
+                        filteredProperties.push(property);
+                    }
+                }
+                return filteredProperties
+
+            }
+            else {
+                return properties
+            }
+        }
+
+
+        const filterByAmenities = async (properties) => {
+            const filteredProperties = [];
+
+            if (amenities !== undefined && amenities.length > 0) {
+                const amenitiesToCheck = amenities.map((amenity) => amenity.name);
+                for (const property of properties) {
+                    const propertyAmenities = (property.Amenities);
+                    const propertyAmenitiesNames = propertyAmenities.map((amenity) => amenity.name);
+
+                    if (amenitiesToCheck.every((amenity) => propertyAmenitiesNames.includes(amenity))) {
+
+                        filteredProperties.push(property);
+                    }
+                }
+                return filteredProperties
+
+            }
+            else {
+                return properties
+            }
+
+        }
+
+        const filterByPrice = async (properties) => {
+            console.log(minPrice)
+            console.log(maxPrice)
+
+            const filteredProperties = [];
+            if (minPrice !== undefined) {
+                for (const property of properties) {
+                    if ((property.Price) > (minPrice) && property.Price <= parseInt(maxPrice)) {
+                        filteredProperties.push(property);
+                    }
+                }
+                return filteredProperties
+            }
+            else {
+                return properties
+            }
+        }
+
+
+        const sortByDistance = async (properties) => {
+            if (latitude !== undefined && longitude !== undefined) {
+                const sortedProperties = properties.sort((a, b) => {
+                    const distanceA = Math.sqrt(Math.pow(a.Latitude - latitude, 2) + Math.pow(a.Longitude - longitude, 2));
+                    const distanceB = Math.sqrt(Math.pow(b.Latitude - latitude, 2) + Math.pow(b.Longitude - longitude, 2));
+                    return distanceA - distanceB;
+                });
+                return sortedProperties;
+            }
+            else {
+                return properties
+            }
+        }
+
+
+        const properties = await PropertiesModel.findAll();
+
+        await properties.forEach((property) => {
             property.PropertyImages = JSON.parse(property.PropertyImages);
             property.Amenities = JSON.parse(property.Amenities);
             property.Facilities = JSON.parse(property.Facilities);
@@ -112,10 +195,18 @@ const getAllProperties = async (req, res) => {
             property.Meals = JSON.parse(property.Meals);
         });
 
-        return res.status(200).json(properties);
+
+
+        const propertyFilteredByAmenities = await filterByAmenities(properties)
+        const propertyFilteredByFacilities = await filterByFacilities(propertyFilteredByAmenities)
+
+        const propertyFilteredByPrice = await filterByPrice(propertyFilteredByFacilities)
+        const propertyFilteredByDistance = await sortByDistance(propertyFilteredByPrice)
+
+        return res.status(200).json(propertyFilteredByDistance);
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: 'Internal Server Error' });
+        return res.status(500).json({ message: 'Internal Server Error' });
     }
 
 
@@ -179,7 +270,7 @@ const getPropertyDetails = async (req, res) => {
         })
 
         if (!userSavedProperties) {
-            console.log("User Not Found")
+
         }
         const save = { saved: false }
         if (userSavedProperties) {

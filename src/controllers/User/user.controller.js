@@ -2,7 +2,8 @@ const { AuthTokenModel } = require("../../models/AuthToken/AuthToken.model");
 const { PropertiesModel } = require("../../models/Properties/Properties.Model");
 const { UserModel } = require("../../models/User/User.Model");
 const uniqid = require('uniqid')
-const uuid = require('uuid')
+const uuid = require('uuid');
+const { firebaseAdmin } = require("../../utils/firebasClient");
 const RegisterController = async (req, res) => {
     try {
         const userId = uniqid("Accomzy-")
@@ -266,6 +267,19 @@ const updateUserProfile = async (req, res) => {
             }, {
                 where: {
                     UserId: UserId
+                }
+            })
+            await firebaseAdmin.database().ref('Rooms').once('value', (snapshot) => {
+                const rooms = snapshot.val()
+                if (rooms) {
+                    for (const room in rooms) {
+                        if (rooms[room][UserId]) {
+                            firebaseAdmin.database().ref('Rooms').child(room).child(UserId).update({
+                                Name: Name,
+                                ProfilePhoto: ProfilePhoto
+                            })
+                        }
+                    }
                 }
             })
             return res.status(200).json({ message: 'Profile Updated' });
