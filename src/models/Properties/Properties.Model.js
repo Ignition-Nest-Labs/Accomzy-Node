@@ -123,6 +123,11 @@ const PropertiesModel = dbConnection.define('Properties', {
         allowNull: false,
         collate: 'utf8mb4_general_ci',
     },
+    Approved: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+    },
+
 });
 
 module.exports = { PropertiesModel };

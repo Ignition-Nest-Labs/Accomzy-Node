@@ -1,4 +1,4 @@
-const { registerProperty, getAllProperties, getPropertyDetails, getYourListedProperties, PostReview, SearchProperty, getFilterOptions, getFilteredProperties } = require('../../controllers/Properties/Properties.controller');
+const { registerProperty, getAllProperties, getPropertyDetails, getYourListedProperties, PostReview, SearchProperty, getFilterOptions, getFilteredProperties, getNotApprovedProperties, approveProperty } = require('../../controllers/Properties/Properties.controller');
 const { authMiddleware } = require('../../middlewares/Auth/auth.middleware');
 
 
@@ -12,6 +12,8 @@ router.post('/PostReview', authMiddleware, PostReview)
 router.post('/getFilterOptions', getFilterOptions)
 router.post('/getFilteredProperties', getFilteredProperties)
 router.post('/SearchProperty', SearchProperty)
+router.post('/getNotApprovedProperties', getNotApprovedProperties)
+router.post('/approveProperty', approveProperty)
 module.exports = {
     PropertyRoutes: router,
 };

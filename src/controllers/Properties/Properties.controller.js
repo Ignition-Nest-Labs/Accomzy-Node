@@ -85,7 +85,8 @@ const registerProperty = async (req, res) => {
             Facilities,
             Rules,
             AdditionalNote,
-            Price
+            Price,
+            Approved: false,
         });
 
         return res.status(201).json(newProperty);
@@ -185,7 +186,11 @@ const getAllProperties = async (req, res) => {
         }
 
 
-        const properties = await PropertiesModel.findAll();
+        const properties = await PropertiesModel.findAll({
+            where: {
+                Approved: true,
+            }
+        });
 
         await properties.forEach((property) => {
             property.PropertyImages = JSON.parse(property.PropertyImages);
@@ -292,8 +297,6 @@ const getPropertyDetails = async (req, res) => {
         return res.status(500).json({ message: 'Internal Server Error' });
     }
 }
-
-
 const getYourListedProperties = async (req, res) => {
     try {
         const { UserId } = req.user
@@ -520,6 +523,70 @@ const getFilteredProperties = async (req, res) => {
 }
 
 
+const getNotApprovedProperties = async (req, res) => {
+    try {
+
+        let propertyData = await PropertiesModel.findAll({
+            where: {
+
+                Approved: false
+            }
+        })
+        if (!propertyData) {
+            return res.status(404).json({ message: 'Property not found' });
+        }
+        if (propertyData) {
+            propertyData.forEach((property) => {
+                property.PropertyImages = JSON.parse(property.PropertyImages);
+                property.Amenities = JSON.parse(property.Amenities);
+                property.Facilities = JSON.parse(property.Facilities);
+                property.Rules = JSON.parse(property.Rules);
+                property.Meals = JSON.parse(property.Meals);
+            });
+            return res.status(200).json(propertyData);
+        }
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+
+const approveProperty = async (req, res) => {
+    try {
+        const { propertyId } = req.body
+        if (!propertyId) {
+            return res.status(404).send({
+                message: "Property Id Not Defined"
+            })
+        }
+        let propertyData = await PropertiesModel.findOne({
+            where: {
+                PropertyId: propertyId,
+
+            }
+        })
+        if (!propertyData) {
+            return res.status(404).json({ message: 'Property not found' });
+        }
+        if (propertyData) {
+            await PropertiesModel.update({
+                Approved: true
+            }, {
+                where: {
+                    PropertyId: propertyId
+                }
+            })
+            return res.status(200).json({ message: "Property Approved Successfully" });
+        }
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
 module.exports = {
     registerProperty,
     getAllProperties,
@@ -528,5 +595,7 @@ module.exports = {
     PostReview,
     SearchProperty,
     getFilterOptions,
-    getFilteredProperties
+    getFilteredProperties,
+    getNotApprovedProperties,
+    approveProperty
 };
