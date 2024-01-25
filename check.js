@@ -42,7 +42,7 @@ function getRandomPropertyType() {
 }
 
 function getRandomCity() {
-    const cities = ["Delhi", "Mumbai", "Kolkata", "Chennai", "Bangalore", "Hyderabad", "Ahmedabad", "Pune", "Surat", "Jaipur", "Kanpur", "Lucknow", "Nagpur", "Patna", "Indore", "Thane", "Bhopal", "Visakhapatnam", "Vadodara", "Firozabad", "Ludhiana", "Rajkot", "Agra", "Siliguri", "Nashik", "Faridabad", "Patiala", "Meerut", "Kalyan-Dombivali", "Vasai-Virar", "Varanasi", "Srinagar", "Dhanbad", "Jodhpur", "Amritsar", "Raipur", "Allahabad", "Coimbatore", "Jabalpur", "Gwalior", "Vijayawada", "Madurai", "Guwahati", "Chandigarh", "Hubli-Dharwad", "Amroha", "Moradabad", "Gurgaon", "Aligarh", "Solapur", "Ranchi", "Jalandhar", "Tiruchirappalli", "Bhubaneswar", "Salem", "Warangal", "Mira-Bhayandar", "Thiruvananthapuram", "Bhiwandi", "Saharanpur", "Guntur", "Amravati", "Bikaner", "Noida", "Jamshedpur", "Bhilai", "Cuttack", "Firozabad", "Kochi", "Nellore", "Bhavnagar", "Dehradun", "Durgapur", "Asansol", "Rourkela", "Nanded", "Kolhapur", "Ajmer", "Akola", "Gulbarga", "Jamnagar", "Ujjain", "Loni", "Siliguri", "Jhansi", "Ulhasnagar", "Jammu", "Sangli-Miraj", "Mangalore", "Erode", "Belgaum", "Kurnool", "Ambattur", "Rajahmundry", "Tirunelveli", "Malegaon", "Gaya", "Tirupur", "Davanagere", "Kozhikode", "Akola", "Kurnool", "Bokaro", "Rajahmundry", "Ballari", "Agartala", "Bhagalpur", "Latur", "Dhule", "Korba", "Bhilwara", "Brahmapur", "Mysore", "Muzaffarpur", "Ahmednagar", "Kollam", "Raghun"]
+    const cities = ["Delhi", "Mumbai", "Siliguri", "Nashik", "Faridabad", "Patiala", "Meerut", "Kalyan-Dombivali", "Vasai-Virar", "Varanasi", "Srinagar", "Dhanbad", "Jodhpur", "Amritsar", "Raipur", "Allahabad", "Coimbatore", "Jabalpur", "Gwalior", "Vijayawada", "Madurai", "Guwahati", "Chandigarh", "Hubli-Dharwad", "Amroha", "Moradabad", "Gurgaon", "Aligarh", "Solapur", "Ranchi", "Jalandhar", "Tiruchirappalli", "Bhubaneswar", "Salem", "Warangal", "Mira-Bhayandar", "Thiruvananthapuram", "Bhiwandi", "Saharanpur", "Guntur", "Amravati", "Bikaner", "Noida", "Jamshedpur", "Bhilai", "Cuttack", "Firozabad", "Kochi", "Nellore", "Bhavnagar", "Dehradun", "Durgapur", "Asansol", "Rourkela", "Nanded", "Kolhapur", "Ajmer", "Akola", "Gulbarga", "Jamnagar", "Ujjain", "Loni", "Siliguri", "Jhansi", "Ulhasnagar", "Jammu", "Sangli-Miraj", "Mangalore", "Erode", "Belgaum", "Kurnool", "Ambattur", "Rajahmundry", "Tirunelveli", "Malegaon", "Gaya", "Tirupur", "Davanagere", "Kozhikode", "Akola", "Kurnool", "Bokaro", "Rajahmundry", "Ballari", "Agartala", "Bhagalpur", "Latur", "Dhule", "Korba", "Bhilwara", "Brahmapur", "Mysore", "Muzaffarpur", "Ahmednagar", "Kollam", "Raghun"]
     return getRandomFromArray(cities);
 }
 
@@ -54,6 +54,19 @@ function getRandomKeyword(propertyType) {
         Villa: 'luxury',
         Penthouse: 'modern',
         Chalet: 'mountain',
+        Bungalow: 'luxury',
+        Castle: 'castle',
+        Dorm: 'college',
+        Farmhouse: 'farm',
+        Guesthouse: 'guesthouse',
+        Hostel: 'hostel',
+        Hotel: 'hotel',
+        Hotel: 'hotel',
+        Houseboat: 'boat',
+        Hut: 'hut',
+        Inn: 'inn',
+        Loft: 'loft',
+        Resort: 'resort',
     };
     return keywords[propertyType];
 }
@@ -117,12 +130,12 @@ function getRandomLongitude() {
     return getRandomNumber(68, 98).toFixed(4);
 }
 function getRandomState() {
-    const states = ['CA', 'NY', 'FL', 'TX', 'CO', 'IL', 'WA', 'TN', 'MA', 'DC'];
+    const states = ['Madhya Pradesh', 'Maharashtra', 'Rajasthan', 'Uttar Pradesh', 'Bihar', 'Andhra Pradesh', 'Karnataka', 'Gujarat', 'Tamil Nadu', 'Odisha', 'Telangana', 'Kerala', 'Jharkhand', 'Assam', 'Punjab', 'Chhattisgarh', 'Haryana', 'Delhi', 'Jammu and Kashmir', 'Uttarakhand', 'Himachal Pradesh', 'Tripura', 'Meghalaya', 'Manipur', 'Nagaland', 'Goa', 'Arunachal Pradesh', 'Mizoram', 'Sikkim'];
     return getRandomFromArray(states);
 }
 
 function getRandomLandmark() {
-    const landmarks = ['Central Park', 'Hollywood Walk of Fame', 'South Beach', 'Golden Gate Bridge', 'Rocky Mountains', 'National Mall', 'Space Needle', 'Broadway', 'Fenway Park', 'The Alamo'];
+    const landmarks = ['Opposite Axis Bank', 'Near SBI ATM', 'Near HDFC Bank', 'Near ICICI Bank', 'Near Bank of Baroda', 'Near Bank of India', 'Near Canara Bank', 'Near Punjab National Bank', 'Near Union Bank of India', 'Near Indian Bank', 'Near Central Bank of India', 'Near UCO Bank', 'Near IndusInd Bank', 'Near Allahabad Bank', 'Near Corporation Bank', 'Near Bank of Maharashtra', 'Near United Bank of India', 'Near Dena Bank', 'Near Vijaya Bank', 'Near Oriental Bank of Commerce', 'Near Syndicate Bank', 'Near Andhra Bank', 'Near Punjab & Sind Bank', 'Near State Bank of Hyderabad', 'Near State Bank of Mysore', 'Near State Bank of Patiala', 'Near State Bank of Travancore', 'Near IDBI Bank', 'Near Bharatiya Mahila Bank', 'Near Axis Bank', 'Near Kotak Mahindra Bank', 'Near Yes Bank', 'Near Federal Bank', 'Near South Indian Bank', 'Near Karur Vysya Bank', 'Near Karnataka Bank', 'Near Tamilnad Mercantile Bank', 'Near Lakshmi Vilas Bank', 'Near DCB Bank', 'Near Ratnakar Bank', 'Near Nainital Bank', 'Near Jammu and Kashmir Bank', 'Near Bandhan Bank', 'Near RBL Bank', 'Near Catholic Syrian Bank', 'Near City Union Bank', 'Near Development Credit Bank', 'Near Dhanlaxmi Bank', 'Near IDFC Bank', 'Near Indian Overseas Bank', 'Near Kotak Mahindra Bank', 'Near Yes Bank', 'Near Federal Bank', 'Near South Indian Bank', 'Near Karur Vysya Bank', 'Near Karnataka Bank', 'Near Tamilnad Mercantile Bank', 'Near Lakshmi Vilas Bank', 'Near DCB Bank', 'Near Ratnakar Bank', 'Near Nainital Bank', 'Near Jammu and Kashmir Bank', 'Near Bandhan Bank', 'Near RBL Bank', 'Near Catholic Syrian Bank', 'Near City Union Bank', 'Near Development Credit Bank', 'Near Dhanlaxmi Bank', 'Near IDFC Bank', 'Near Indian Overseas Bank']
     return getRandomFromArray(landmarks);
 }
 
@@ -131,7 +144,7 @@ function getRandomPinCode() {
 }
 
 function getRandomStreet() {
-    const streetNames = ['Main', 'Maple', 'Oak', 'Cedar', 'Pine', 'Birch', 'Elm', 'Willow', 'Aspen', 'Juniper'];
+    const streetNames = ['MG Road ', 'Station Road', 'Main Road', 'Park Street', 'MG Marg', 'Raj Path', 'VIP Road', 'VIP Marg', 'VIP Path', 'VIP Street', 'VIP Avenue', 'VIP Lane', 'VIP Drive', 'VIP Boulevard', 'VIP Place', 'VIP Circle', 'VIP Court', 'VIP Way', 'VIP Terrace'];
     const suffixes = ['Street', 'Avenue', 'Lane', 'Drive', 'Boulevard', 'Place', 'Circle', 'Court', 'Way', 'Terrace'];
     return `${getRandomFromArray(streetNames)} ${getRandomFromArray(suffixes)}`;
 }
@@ -158,8 +171,8 @@ async function performPostRequests(json) {
             maxBodyLength: Infinity,
             url: 'http://localhost:4000/Property/RegisterProperty', // Replace with the correct URL
             headers: {
-                'Token': '8f7a7bef-4c42-4221-a96b-81b08ed95e62',
-                'UserId': 'Accomzy-62uj47qlrr8ucy9',
+                'Token': '0914ec38-898b-44b1-9199-f5561033ac6a',
+                'UserId': 'Accomzy-62uj15pilrsqlfm1',
                 'Content-Type': 'application/json'
             },
             data: data

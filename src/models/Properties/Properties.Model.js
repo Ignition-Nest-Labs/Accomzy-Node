@@ -127,6 +127,11 @@ const PropertiesModel = dbConnection.define('Properties', {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
     },
+    InstituteNearBy: {
+
+        type: DataTypes.STRING(400),
+        allowNull: false,
+    },
 
 });
 

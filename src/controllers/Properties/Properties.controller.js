@@ -28,7 +28,8 @@ const registerProperty = async (req, res) => {
             Facilities,
             Rules,
             AdditionalNote,
-            Price
+            Price,
+            InstituteNearBy
         } = req.body;
 
         // Check if all required fields are present
@@ -86,7 +87,8 @@ const registerProperty = async (req, res) => {
             Rules,
             AdditionalNote,
             Price,
-            Approved: false,
+            InstituteNearBy,
+            Approved: true,
         });
 
         return res.status(201).json(newProperty);
@@ -103,7 +105,7 @@ const getAllProperties = async (req, res) => {
 
     try {
 
-        const { facilities, amenities, minPrice, maxPrice, latitude, longitude } = req.body;
+        const { facilities, amenities, minPrice, maxPrice, latitude, longitude, city } = req.body;
 
 
 
@@ -153,8 +155,7 @@ const getAllProperties = async (req, res) => {
         }
 
         const filterByPrice = async (properties) => {
-            console.log(minPrice)
-            console.log(maxPrice)
+
 
             const filteredProperties = [];
             if (minPrice !== undefined) {
@@ -185,6 +186,27 @@ const getAllProperties = async (req, res) => {
             }
         }
 
+        const filterByCity = async (properties) => {
+            console.log("City is defined")
+            console.log(city)
+            const filteredProperties = [];
+            if (city !== undefined) {
+                logger.info("City is defined")
+                logger.info(city)
+
+                for (const property of properties) {
+                    if ((property.City).toLowerCase() === (city).toLowerCase()) {
+                        filteredProperties.push(property);
+                        console.log("Found Property In " + city + " " + property.PropertyName)
+                    }
+
+                }
+                return filteredProperties
+            }
+            else {
+                return properties
+            }
+        }
 
         const properties = await PropertiesModel.findAll({
             where: {
@@ -207,8 +229,9 @@ const getAllProperties = async (req, res) => {
 
         const propertyFilteredByPrice = await filterByPrice(propertyFilteredByFacilities)
         const propertyFilteredByDistance = await sortByDistance(propertyFilteredByPrice)
+        const propertyFilteredByCity = await filterByCity(propertyFilteredByDistance)
 
-        return res.status(200).json(propertyFilteredByDistance);
+        return res.status(200).json(propertyFilteredByCity);
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Internal Server Error' });
@@ -430,7 +453,7 @@ const getFilterOptions = async (req, res) => {
         const amenities = []
         const facilities = []
         const properties = await PropertiesModel.findAll()
-
+        const cities = []
         await properties.forEach((property) => {
             property.PropertyImages = JSON.parse(property.PropertyImages);
             property.Amenities = JSON.parse(property.Amenities);
@@ -458,6 +481,7 @@ const getFilterOptions = async (req, res) => {
                     }
                 }
             }
+            cities.push(property.City)
 
 
 
@@ -486,13 +510,23 @@ const getFilterOptions = async (req, res) => {
             return false;
         });
 
+        const finalCities = {}
+        const finalCitiesArray = cities.filter(item => {
+            const key = `${item}`;
+            if (!finalCities[key]) {
+                finalCities[key] = true;
+                return true;
+            }
+            return false;
+        });
+
 
         const maxPrice = Math.max.apply(Math, properties.map(function (o) { return o.Price; }))
         const minPrice = Math.min.apply(Math, properties.map(function (o) { return o.Price; }))
 
 
 
-        return res.status(200).json({ Facilities: finalFacilitiesArray, Amenities: finalAmenitiesArray, maxPrice, minPrice });
+        return res.status(200).json({ Facilities: finalFacilitiesArray, Amenities: finalAmenitiesArray, maxPrice, minPrice, Cities: finalCitiesArray });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: 'Internal Server Error' });
