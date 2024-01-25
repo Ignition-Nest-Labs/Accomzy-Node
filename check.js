@@ -28,12 +28,18 @@ function generateRandomJsons() {
             Rules: generateRandomRules(),
             AdditionalNote: `This is a sample property for testing purposes ${i}`,
             Price: getRandomNumber(800, 5000).toString(),
+            InstituteNearBy: getRandomInstituteNearBy(),
         };
 
         jsons.push(json);
     }
 
     return jsons;
+}
+
+function getRandomInstituteNearBy() {
+    const institutes = ['IIT', 'NI  ', 'NIT', 'IIM', 'IISER', 'IISc', 'IIS', 'IIST', 'IISER', 'IISc', 'IIS', 'IIST', 'IISER', 'IISc', 'IIS', 'IIST', 'IISER', 'IISc', 'IIS', 'IIST', 'IISER', 'IISc', 'IIS', 'IIST', 'IISER', 'IISc', 'IIS', 'IIST', 'IISER', 'IISc', 'IIS', 'IIST', 'IISER', 'IISc', 'IIS', 'IIST', 'IISER', 'IISc', 'IIS', 'IIST']
+    return getRandomFromArray(institutes);
 }
 
 function getRandomPropertyType() {
@@ -171,7 +177,7 @@ async function performPostRequests(json) {
             maxBodyLength: Infinity,
             url: 'http://localhost:4000/Property/RegisterProperty', // Replace with the correct URL
             headers: {
-                'Token': '0914ec38-898b-44b1-9199-f5561033ac6a',
+                'Token': 'f10d0a4f-3276-44db-8148-75e933274e4d',
                 'UserId': 'Accomzy-62uj15pilrsqlfm1',
                 'Content-Type': 'application/json'
             },

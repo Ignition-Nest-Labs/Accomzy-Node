@@ -105,7 +105,16 @@ const getAllProperties = async (req, res) => {
 
     try {
 
-        const { facilities, amenities, minPrice, maxPrice, latitude, longitude, city } = req.body;
+        const { facilities,
+            amenities,
+            minPrice,
+            maxPrice,
+            latitude,
+            longitude,
+            city,
+            institute,
+            searchQuery } = req.body;
+
 
 
 
@@ -208,6 +217,25 @@ const getAllProperties = async (req, res) => {
             }
         }
 
+
+        const filterByInstitute = async (properties) => {
+            console.log("Institute is defined")
+            console.log(institute)
+            const filteredProperties = [];
+            if (institute !== undefined) {
+                for (const property of properties) {
+                    if ((property.InstituteNearBy).toLowerCase() === (institute).toLowerCase()) {
+                        filteredProperties.push(property);
+                    }
+                }
+                return filteredProperties
+            }
+            else {
+                return properties
+            }
+        }
+
+
         const properties = await PropertiesModel.findAll({
             where: {
                 Approved: true,
@@ -230,8 +258,9 @@ const getAllProperties = async (req, res) => {
         const propertyFilteredByPrice = await filterByPrice(propertyFilteredByFacilities)
         const propertyFilteredByDistance = await sortByDistance(propertyFilteredByPrice)
         const propertyFilteredByCity = await filterByCity(propertyFilteredByDistance)
+        const propertyFilteredByInstitute = await filterByInstitute(propertyFilteredByCity)
 
-        return res.status(200).json(propertyFilteredByCity);
+        return res.status(200).json(propertyFilteredByInstitute);
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Internal Server Error' });
@@ -454,6 +483,7 @@ const getFilterOptions = async (req, res) => {
         const facilities = []
         const properties = await PropertiesModel.findAll()
         const cities = []
+        const instituteNearBy = []
         await properties.forEach((property) => {
             property.PropertyImages = JSON.parse(property.PropertyImages);
             property.Amenities = JSON.parse(property.Amenities);
@@ -482,6 +512,7 @@ const getFilterOptions = async (req, res) => {
                 }
             }
             cities.push(property.City)
+            instituteNearBy.push(property.InstituteNearBy)
 
 
 
@@ -520,13 +551,22 @@ const getFilterOptions = async (req, res) => {
             return false;
         });
 
+        const finalInstituteNearBy = {}
+        const finalInstituteNearByArray = instituteNearBy.filter(item => {
+            const key = `${item}`;
+            if (!finalInstituteNearBy[key]) {
+                finalInstituteNearBy[key] = true;
+                return true;
+            }
+            return false;
+        });
 
         const maxPrice = Math.max.apply(Math, properties.map(function (o) { return o.Price; }))
         const minPrice = Math.min.apply(Math, properties.map(function (o) { return o.Price; }))
 
 
 
-        return res.status(200).json({ Facilities: finalFacilitiesArray, Amenities: finalAmenitiesArray, maxPrice, minPrice, Cities: finalCitiesArray });
+        return res.status(200).json({ Facilities: finalFacilitiesArray, Amenities: finalAmenitiesArray, maxPrice, minPrice, Cities: finalCitiesArray, Institutes: finalInstituteNearByArray });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: 'Internal Server Error' });
