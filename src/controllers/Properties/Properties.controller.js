@@ -235,6 +235,29 @@ const getAllProperties = async (req, res) => {
             }
         }
 
+        const filterBySearchQuery = async (properties) => {
+            console.log("Search Query is defined")
+            console.log(searchQuery)
+            const filteredProperties = [];
+            if (searchQuery !== undefined) {
+                for (const property of properties) {
+                    if ((property.PropertyName).toLowerCase().includes((searchQuery).toLowerCase()) ||
+                        (property.PropertyType).toLowerCase().includes((searchQuery).toLowerCase()) ||
+                        (property.City).toLowerCase().includes((searchQuery).toLowerCase()) ||
+                        (property.State).toLowerCase().includes((searchQuery).toLowerCase()) ||
+                        (property.Landmark).toLowerCase().includes((searchQuery).toLowerCase()) ||
+                        (property.PinCode).toLowerCase().includes((searchQuery).toLowerCase()) ||
+                        (property.Street).toLowerCase().includes((searchQuery).toLowerCase())) {
+                        filteredProperties.push(property);
+                    }
+                }
+                return filteredProperties
+            }
+            else {
+                return properties
+            }
+        }
+
 
         const properties = await PropertiesModel.findAll({
             where: {
@@ -259,8 +282,9 @@ const getAllProperties = async (req, res) => {
         const propertyFilteredByDistance = await sortByDistance(propertyFilteredByPrice)
         const propertyFilteredByCity = await filterByCity(propertyFilteredByDistance)
         const propertyFilteredByInstitute = await filterByInstitute(propertyFilteredByCity)
+        const propertyFilteredBySearchQuery = await filterBySearchQuery(propertyFilteredByInstitute)
 
-        return res.status(200).json(propertyFilteredByInstitute);
+        return res.status(200).json(propertyFilteredBySearchQuery);
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Internal Server Error' });
