@@ -88,7 +88,7 @@ const registerProperty = async (req, res) => {
             AdditionalNote,
             Price,
             InstituteNearBy,
-            Approved: true,
+            Approved: false,
         });
 
         return res.status(201).json(newProperty);
