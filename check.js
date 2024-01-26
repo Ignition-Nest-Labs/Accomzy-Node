@@ -177,8 +177,8 @@ async function performPostRequests(json) {
             maxBodyLength: Infinity,
             url: 'http://localhost:4000/Property/RegisterProperty', // Replace with the correct URL
             headers: {
-                'Token': 'f10d0a4f-3276-44db-8148-75e933274e4d',
-                'UserId': 'Accomzy-62uj15pilrsqlfm1',
+                'Token': 'Test',
+                'UserId': 'Test',
                 'Content-Type': 'application/json'
             },
             data: data
