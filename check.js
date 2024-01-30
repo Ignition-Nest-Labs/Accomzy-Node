@@ -43,7 +43,7 @@ function getRandomInstituteNearBy() {
 }
 
 function getRandomPropertyType() {
-    const propertyTypes = ['Apartment', 'House', 'Cabin', 'Villa', 'Penthouse', 'Chalet', "Bungalow", "   Castle", "   Dorm", "   Farmhouse", "   Guesthouse", "   Hostel", "   Hotel", "   Hotel suite", "   Houseboat", "   Hut", "   Inn", "   Loft", "   Resort", "   Townhouse", "   Villa"];
+    const propertyTypes = ['House / Apartment', 'PG'];
     return getRandomFromArray(propertyTypes);
 }
 
@@ -159,7 +159,9 @@ function generateRandomImages(keyword) {
     return [
         `https://loremflickr.com/640/480/${keyword}`,
         `https://loremflickr.com/640/480/${keyword}`,
-        `https://loremflickr.com/640/480/${keyword}`
+        `https://loremflickr.com/640/480/${keyword}`,
+        `https://loremflickr.com/640/480/${keyword}`,
+        `https://loremflickr.com/640/480/${keyword}`,
     ];
 }
 

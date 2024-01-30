@@ -3,11 +3,13 @@ const { UserModel } = require("../../models/User/User.Model");
 const { v4: uuidv4 } = require('uuid');
 const { logger } = require("../../utils/logger");
 
+
+
 const registerProperty = async (req, res) => {
     const propertyId = uuidv4();
     try {
         const {
-
+            Occupancies,
             PropertyName,
             Meals,
             PropertyType,
@@ -29,7 +31,8 @@ const registerProperty = async (req, res) => {
             Rules,
             AdditionalNote,
             Price,
-            InstituteNearBy
+            InstituteNearBy,
+            Gender,
         } = req.body;
 
         // Check if all required fields are present
@@ -53,12 +56,12 @@ const registerProperty = async (req, res) => {
         }
 
         // Additional checks for field formats
-        if (!Array.isArray(PropertyImages) || PropertyImages.length < 3) {
-            return res.status(400).json({ error: 'PropertyImages must be an array with at least 3 items' });
+        if (!Array.isArray(PropertyImages) || PropertyImages.length < 5) {
+            return res.status(400).json({ message: 'At-least 5 Property Images are required ' });
         }
 
         if (!Array.isArray(Amenities) || !Array.isArray(Facilities) || !Array.isArray(Rules) || !Array.isArray(Meals)) {
-            return res.status(400).json({ error: 'Amenities, Facilities, and Rules and Meals must be arrays' });
+            return res.status(400).json({ message: 'Amenities, Facilities, and Rules and Meals must be arrays' });
         }
 
 
@@ -88,6 +91,8 @@ const registerProperty = async (req, res) => {
             AdditionalNote,
             Price,
             InstituteNearBy,
+            Gender,
+            Occupancies,
             Approved: false,
         });
 
@@ -98,13 +103,7 @@ const registerProperty = async (req, res) => {
     }
 };
 const getAllProperties = async (req, res) => {
-
-
-
-
-
     try {
-
         const { facilities,
             amenities,
             minPrice,
@@ -113,7 +112,11 @@ const getAllProperties = async (req, res) => {
             longitude,
             city,
             institute,
-            searchQuery } = req.body;
+            searchQuery,
+            type,
+            Occupancies
+        } = req.body;
+
 
 
 
@@ -168,8 +171,10 @@ const getAllProperties = async (req, res) => {
 
             const filteredProperties = [];
             if (minPrice !== undefined) {
+                console.log("Min Price is defined")
+                console.log(minPrice)
                 for (const property of properties) {
-                    if ((property.Price) > (minPrice) && property.Price <= parseInt(maxPrice)) {
+                    if ((property.Price) >= parseInt(minPrice) && property.Price <= parseInt(maxPrice)) {
                         filteredProperties.push(property);
                     }
                 }
@@ -241,6 +246,7 @@ const getAllProperties = async (req, res) => {
             const filteredProperties = [];
             if (searchQuery !== undefined) {
                 for (const property of properties) {
+                    searchQuery.toLowerCase().replace(/\s/g, '')
                     if ((property.PropertyName).toLowerCase().includes((searchQuery).toLowerCase()) ||
                         (property.PropertyType).toLowerCase().includes((searchQuery).toLowerCase()) ||
                         (property.City).toLowerCase().includes((searchQuery).toLowerCase()) ||
@@ -257,6 +263,25 @@ const getAllProperties = async (req, res) => {
                 return properties
             }
         }
+
+        const filterByType = async (properties) => {
+            console.log("Type is defined")
+            console.log(type)
+            const filteredProperties = [];
+            if (type !== undefined) {
+                for (const property of properties) {
+                    if (((property.PropertyType).toLowerCase().replace(/\s/g, '')) === ((type).toLowerCase().replace(/\s/g, ''))
+                    ) {
+                        filteredProperties.push(property);
+                    }
+                }
+                return filteredProperties
+            }
+            else {
+                return properties
+            }
+        }
+
 
 
         const properties = await PropertiesModel.findAll({
@@ -277,14 +302,13 @@ const getAllProperties = async (req, res) => {
 
         const propertyFilteredByAmenities = await filterByAmenities(properties)
         const propertyFilteredByFacilities = await filterByFacilities(propertyFilteredByAmenities)
-
         const propertyFilteredByPrice = await filterByPrice(propertyFilteredByFacilities)
         const propertyFilteredByDistance = await sortByDistance(propertyFilteredByPrice)
         const propertyFilteredByCity = await filterByCity(propertyFilteredByDistance)
         const propertyFilteredByInstitute = await filterByInstitute(propertyFilteredByCity)
         const propertyFilteredBySearchQuery = await filterBySearchQuery(propertyFilteredByInstitute)
-
-        return res.status(200).json(propertyFilteredBySearchQuery);
+        const propertyFilteredByType = await filterByType(propertyFilteredBySearchQuery)
+        return res.status(200).json(propertyFilteredByType);
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Internal Server Error' });
@@ -684,6 +708,9 @@ const approveProperty = async (req, res) => {
         return res.status(500).json({ message: 'Internal Server Error' });
     }
 }
+
+
+
 
 module.exports = {
     registerProperty,

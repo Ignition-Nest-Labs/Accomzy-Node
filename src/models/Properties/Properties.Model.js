@@ -38,6 +38,14 @@ const PropertiesModel = dbConnection.define('Properties', {
         type: DataTypes.JSON,
         collate: 'utf8mb4_bin',
     },
+    Gender: {
+        type: DataTypes.STRING(255),
+        collate: 'utf8mb4_bin',
+    },
+    Occupancies: {
+        type: DataTypes.JSON,
+        collate: 'utf8mb4_bin',
+    },
     PropertyImages: {
         type: DataTypes.JSON,
         collate: 'utf8mb4_general_ci',
