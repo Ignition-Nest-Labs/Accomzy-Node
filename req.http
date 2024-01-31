@@ -1,0 +1,5 @@
+
+@base_url = http://localhost:4000
+
+### Get All Institutes
+POST  {{base_url}}/Property/getAllInstitutes?page=3&pageSize=10&search=indore

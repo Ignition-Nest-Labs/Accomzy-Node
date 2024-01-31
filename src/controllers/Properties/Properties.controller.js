@@ -710,6 +710,38 @@ const approveProperty = async (req, res) => {
 }
 
 
+const ownerDeleteProperty = async (req, res) => {
+    try {
+        const { propertyId } = req.body
+        if (!propertyId) {
+            return res.status(404).send({
+                message: "Property Id Not Defined"
+            })
+        }
+        let propertyData = await PropertiesModel.findOne({
+            where: {
+                PropertyId: propertyId,
+
+            }
+        })
+        if (!propertyData) {
+            return res.status(404).json({ message: 'Property not found' });
+        }
+        if (propertyData) {
+            await PropertiesModel.destroy({
+                where: {
+                    PropertyId: propertyId
+                }
+            })
+            return res.status(200).json({ message: "Property Deleted Successfully" });
+        }
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
 
 
 module.exports = {
