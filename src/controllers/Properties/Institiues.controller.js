@@ -10,7 +10,7 @@ exports.getAllInstitutes = async (req, res) => {
         // Extract pagination and search parameters from the request query
         const page = parseInt(req.query.page) || 1;
         const pageSize = parseInt(req.query.pageSize) || 10;
-        const searchQuery = req.query.search || '';
+        const {searchQuery} = req.body || '';
 
         // Calculate the offset based on page and pageSize
         const offset = (page - 1) * pageSize;

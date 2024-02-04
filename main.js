@@ -1,5 +1,7 @@
 const mysql = require('mysql');
-const { dbLocalConfig } = require('./src/database/config');
+const dotenv = require("dotenv");
+const { dbLocalConfig, dbProdConfig } = require('./src/database/config');
+const config = dotenv.config().parsed.NODE_ENV === "local" ? dbLocalConfig : dbProdConfig;
 
 
 // Replace these values with your database configuration
@@ -15,7 +17,7 @@ const dbConfig = {
 const pool = mysql.createPool(dbConfig);
 
 // Function to empty all tables in the database
- async function emptyAllTables() {
+async function emptyAllTables() {
     pool.getConnection((err, connection) => {
         if (err) {
             console.error('Error connecting to the database:', err);

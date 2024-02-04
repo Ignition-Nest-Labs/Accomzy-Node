@@ -1,16 +1,20 @@
 const fs = require('fs');
 const mysql = require('mysql');
+const { dbLocalConfig, dbProdConfig } = require('../database/config');
 
 // Load the JSON file
 const jsonData = JSON.parse(fs.readFileSync('Colleges.json', 'utf8'));
 
+const config = dbLocalConfig
+console.log(config)
 // Database connection configuration
 const dbConfig = {
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'Accomzy',
+  host: config.host,
+  user: config.user,
+  password: config.dbPassword,
+  database: config.dbName,
 };
+
 
 // Create a connection to the database
 const connection = mysql.createConnection(dbConfig);
