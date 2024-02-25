@@ -2,11 +2,12 @@ const { PropertiesModel } = require("../../models/Properties/Properties.Model");
 const { UserModel } = require("../../models/User/User.Model");
 const { v4: uuidv4 } = require('uuid');
 const { logger } = require("../../utils/logger");
-
-
+const axios = require('axios');
+const upiGatewayKey = "a7745452-e4fc-4501-8ffb-8e4151a2156c"
 
 const registerProperty = async (req, res) => {
     const propertyId = uuidv4();
+    const PaymentOrderId = uuidv4();
     try {
         const {
             Occupancies,
@@ -94,9 +95,38 @@ const registerProperty = async (req, res) => {
             Gender,
             Occupancies,
             Approved: false,
+            PaymentOrderId,
+            PaymentApproved: false
         });
 
-        return res.status(201).json(newProperty);
+        var data = JSON.stringify({
+            "key": upiGatewayKey,
+            "client_txn_id": PaymentOrderId,
+            "amount": "1",
+            "p_info": "Accomzy Property Approval",
+            "customer_name": ownerUser.Name,
+            "customer_email": "support@accomzy.in",
+            "customer_mobile": ownerUser.PhoneNumber,
+            "redirect_url": "https://api.accomzy.in/Property/checkPaymentStatus",
+            "udf1": "user defined field 1",
+            "udf2": "user defined field 2",
+            "udf3": "user defined field 3"
+        });
+
+        var config = {
+            method: 'post',
+            maxBodyLength: Infinity,
+            url: 'https://api.ekqr.in/api/create_order',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
+        };
+
+        const response = await axios(config)
+
+
+        return res.status(201).json(response.data);
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: 'Internal Server Error' });
@@ -485,6 +515,76 @@ const PostReview = async (req, res) => {
 }
 
 
+const checkPaymentStatus = async (req, res) => {
+
+    const { client_txn_id: PaymentOrderId } = req.query
+    const checkIfPaymentOrderExists = await PropertiesModel.findOne({
+        where: {
+            PaymentOrderId
+        }
+    })
+    if (!checkIfPaymentOrderExists) {
+        return res.status(404).send({
+            message: "Order Id For This Property Was Not Found"
+        })
+    }
+    if (checkIfPaymentOrderExists) {
+        const checkForAlreadyPaid = checkIfPaymentOrderExists.PaymentApproved
+        if (checkForAlreadyPaid) {
+            return res.status(409).send({
+                message: "Payment For This Property Has Already Been Approved"
+            })
+        }
+
+        function formatDate(timestampStr) {
+            // Split the timestamp into date and time parts
+            const timestamp = new Date(timestampStr);
+            const day = ("0" + timestamp.getDate()).slice(-2);
+            const month = ("0" + (timestamp.getMonth() + 1)).slice(-2);
+            const year = timestamp.getFullYear();
+            return `${day}-${month}-${year}`;
+        }
+
+        var data = JSON.stringify({
+            key: upiGatewayKey,
+            client_txn_id: checkIfPaymentOrderExists.PaymentOrderId,
+            txn_date: formatDate(checkIfPaymentOrderExists.createdAt)
+        });
+        console.log(data)
+
+        var config = {
+            method: 'post',
+            maxBodyLength: Infinity,
+            url: 'https://api.ekqr.in/api/check_order_status',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
+        };
+
+
+
+        const response = await axios(config)
+
+        const paymentStatus = response.data.data.status == "success" ? true : false
+        if (paymentStatus) {
+            await PropertiesModel.update({
+                PaymentApproved: true
+            }, {
+                where: {
+                    PaymentOrderId
+                }
+            })
+            return res.status(200).redirect('https://accomzy.in/Owner/Profile')
+        }
+        else {
+            return res.status(409).redirect('http://accomzy.in/property-approval-failed')
+        }
+
+    }
+
+}
+
 const SearchProperty = async (req, res) => {
     try {
 
@@ -754,5 +854,6 @@ module.exports = {
     getFilterOptions,
     getFilteredProperties,
     getNotApprovedProperties,
-    approveProperty
+    approveProperty,
+    checkPaymentStatus
 };

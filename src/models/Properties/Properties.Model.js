@@ -140,6 +140,14 @@ const PropertiesModel = dbConnection.define('Properties', {
         type: DataTypes.STRING(400),
         allowNull: false,
     },
+    PaymentApproved: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+    },
+    PaymentOrderId: {
+        type: DataTypes.STRING(255),
+        collate: 'utf8mb4_general_ci',
+    },
 
 });
 

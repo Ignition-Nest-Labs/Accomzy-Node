@@ -1,5 +1,5 @@
 const { getAllInstitutes, validateInstitute } = require('../../controllers/Properties/Institiues.controller');
-const { registerProperty, getAllProperties, getPropertyDetails, getYourListedProperties, PostReview, SearchProperty, getFilterOptions, getFilteredProperties, getNotApprovedProperties, approveProperty } = require('../../controllers/Properties/Properties.controller');
+const { registerProperty, getAllProperties, getPropertyDetails, getYourListedProperties, PostReview, SearchProperty, getFilterOptions, getFilteredProperties, getNotApprovedProperties, approveProperty, checkPaymentStatus } = require('../../controllers/Properties/Properties.controller');
 const { authMiddleware } = require('../../middlewares/Auth/auth.middleware');
 
 
@@ -17,6 +17,8 @@ router.post('/getNotApprovedProperties', getNotApprovedProperties)
 router.post('/approveProperty', approveProperty)
 router.post('/getAllInstitutes', getAllInstitutes)
 router.post('/validateInstitute', validateInstitute)
+router.get('/checkPaymentStatus', checkPaymentStatus)
+
 
 module.exports = {
     PropertyRoutes: router,
