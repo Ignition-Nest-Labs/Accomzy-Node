@@ -575,7 +575,7 @@ const checkPaymentStatus = async (req, res) => {
                     PaymentOrderId
                 }
             })
-            return res.status(200).redirect('https://accomzy.in/Owner/Profile')
+            return res.status(200).redirect('https://accomzy.in/property-approval-successful')
         }
         else {
             return res.status(409).redirect('http://accomzy.in/property-approval-failed')
