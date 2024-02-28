@@ -102,7 +102,7 @@ const registerProperty = async (req, res) => {
         var data = JSON.stringify({
             "key": upiGatewayKey,
             "client_txn_id": PaymentOrderId,
-            "amount": "1",
+            "amount": "99",
             "p_info": "Accomzy Property Approval",
             "customer_name": ownerUser.Name,
             "customer_email": "support@accomzy.in",
